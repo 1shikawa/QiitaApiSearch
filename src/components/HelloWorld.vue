@@ -4,7 +4,7 @@
     <h2>Essential Links</h2>
     <ul>
       <li>
-        <a
+        <a class="btn btn-primary"
           href="https://vuejs.org"
           target="_blank"
         >
@@ -12,7 +12,7 @@
         </a>
       </li>
       <li>
-        <a
+        <a class="btn btn-primary"
           href="https://forum.vuejs.org"
           target="_blank"
         >
@@ -20,7 +20,7 @@
         </a>
       </li>
       <li>
-        <a
+        <a class="btn btn-primary"
           href="https://chat.vuejs.org"
           target="_blank"
         >
@@ -28,7 +28,7 @@
         </a>
       </li>
       <li>
-        <a
+        <a class="btn btn-primary"
           href="https://twitter.com/vuejs"
           target="_blank"
         >
@@ -36,8 +36,9 @@
         </a>
       </li>
       <br>
+      <br>
       <li>
-        <a
+        <a class="btn btn-primary"
           href="http://vuejs-templates.github.io/webpack/"
           target="_blank"
         >
@@ -48,7 +49,7 @@
     <h2>Ecosystem</h2>
     <ul>
       <li>
-        <a
+        <a class="btn btn-primary"
           href="http://router.vuejs.org/"
           target="_blank"
         >
@@ -56,7 +57,7 @@
         </a>
       </li>
       <li>
-        <a
+        <a class="btn btn-primary"
           href="http://vuex.vuejs.org/"
           target="_blank"
         >
@@ -64,7 +65,7 @@
         </a>
       </li>
       <li>
-        <a
+        <a class="btn btn-primary"
           href="http://vue-loader.vuejs.org/"
           target="_blank"
         >
@@ -72,7 +73,7 @@
         </a>
       </li>
       <li>
-        <a
+        <a class="btn btn-primary"
           href="https://github.com/vuejs/awesome-vue"
           target="_blank"
         >
@@ -82,7 +83,8 @@
     </ul>
     <ul>
       <li>
-        <a href="#/qiitaapisearch">
+        <a class="btn btn-primary"
+           href="#/qiitaapisearch">
           Qiita Real Time Search
         </a>
       </li>
@@ -118,6 +120,6 @@ export default {
   }
 
   a {
-    color: #42b983;
+    color: #ffffff;
   }
 </style>

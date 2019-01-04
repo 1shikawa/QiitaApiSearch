@@ -1,6 +1,6 @@
-# qiitaapisearch
+# QiitaApiSearch
 
-> A Vue.js project
+> VUe.jsとQiitaApiを利用したQiita記事検索アプリ
 
 ## Build Setup
 
