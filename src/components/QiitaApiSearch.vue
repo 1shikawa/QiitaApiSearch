@@ -4,12 +4,12 @@
     <p>
       <input type="text" v-model="keyword">
     </p>
-    <button v-on:click="getAnswer">page1</button>
-    <button v-on:click="getAnswer2">page2</button>
-    <button v-on:click="getAnswer3">page3</button>
-    <button v-on:click="getAnswer4">page4</button>
-    <button v-on:click="getAnswer5">page5</button>
+      <button class="btn btn-secondary" v-on:click="getAnswer2">page2</button>
+      <button class="btn btn-secondary" v-on:click="getAnswer3">page3</button>
+      <button class="btn btn-secondary" v-on:click="getAnswer4">page4</button>
+      <button class="btn btn-secondary" v-on:click="getAnswer5">page5</button>
     <p>{{ message }}</p>
+
     <div class="container-fluid ">
       <table class="table table-hover">
         <thead class="thead-light">
@@ -181,12 +181,13 @@ export default {
   }
 
   .container-fluid {
-    padding-right: 50px;
-    padding-left: 50px;
+    padding-right: 70px;
+    padding-left: 70px;
     margin-right: auto;
     margin-left: auto;
   }
-p {
-  font-size: large;
-}
+
+  p {
+    font-size: large;
+  }
 </style>
