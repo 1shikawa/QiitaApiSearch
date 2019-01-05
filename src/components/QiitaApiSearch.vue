@@ -1,13 +1,14 @@
 <template>
   <div class="qiitasearch">
-    <p>{{ sample }}</p>
     <p>
-      <input type="text" v-model="keyword">
+      <input type="text" v-model="keyword" placeholder="キーワードを入力">
+
     </p>
-      <button class="btn btn-secondary" v-on:click="getAnswer2">page2</button>
-      <button class="btn btn-secondary" v-on:click="getAnswer3">page3</button>
-      <button class="btn btn-secondary" v-on:click="getAnswer4">page4</button>
-      <button class="btn btn-secondary" v-on:click="getAnswer5">page5</button>
+    <p> ex.. {{ sample }}</p>
+    <button class="btn btn-secondary" v-on:click="getAnswer2">page2</button>
+    <button class="btn btn-secondary" v-on:click="getAnswer3">page3</button>
+    <button class="btn btn-secondary" v-on:click="getAnswer4">page4</button>
+    <button class="btn btn-secondary" v-on:click="getAnswer5">page5</button>
     <p>{{ message }}</p>
 
     <div class="container-fluid ">
@@ -16,9 +17,11 @@
         <tr>
           <th>タイトル</th>
           <th>投稿日</th>
-          <th>いいね数</th>
           <th>投稿者Twitter</th>
-          <th>投稿者Link</th>
+          <th>投稿者Webサイト</th>
+          <th>いいね数</th>
+          <th>コメント数</th>
+          <!--<th>閲覧数</th>-->
         </tr>
         </thead>
         <tbody v-for="(item, key, index) in items" :key="index">
@@ -28,13 +31,12 @@
             '...') }}</a></td>
           <td v-else><a v-bind:href="item.url" target="_blank">{{ item.title }}</a></td>
           <td>{{ item.created_at | moment }}</td>
-          <td>{{ item.likes_count }}</td>
-
           <td v-if="item.user.twitter_screen_name">https://twitter.com/{{ item.user.twitter_screen_name}}</td>
           <td v-else></td>
           <td><a v-bind:href="item.user.website_url">{{ item.user.website_url }}</a></td>
-          <!--<td>{{ item.title | string_count }}</td>-->
-
+          <td>{{ item.likes_count }}</td>
+          <td>{{ item.comments_count }}</td>
+          <!--<td>{{ item.page_views_count }}</td>-->
         </tr>
         </tbody>
       </table>
@@ -54,7 +56,7 @@ export default {
       items: '',
       keyword: '',
       message: '',
-      sample: 'python, django, vue, aws, docker, golang'
+      sample: 'python, django, vue, aws, docker, golang...'
     }
   },
 
@@ -103,8 +105,8 @@ export default {
       var params = {page: 2, per_page: 100, query: this.keyword}
       axios.get('https://qiita.com/api/v2/items', {params})
         .then(function (response) {
-          // console.log(response)
-          vm.items = response.data
+          console.log(response)
+          // vm.items = response.data
         })
         .catch(function (error) {
           vm.message = 'Error!' + error
@@ -119,7 +121,7 @@ export default {
       var params = {page: 3, per_page: 100, query: this.keyword}
       axios.get('https://qiita.com/api/v2/items', {params})
         .then(function (response) {
-          // console.log(response)
+          console.log(response)
           vm.items = response.data
         })
         .catch(function (error) {
@@ -180,9 +182,20 @@ export default {
     table-layout: auto;
   }
 
+  /*.table {*/
+    /*border: 1px solid #b4b6b8;*/
+  /*}*/
+
+  .table tr td {
+    border: 1px solid #b4b6b8;
+  }
+    .table tr th {
+    border: 1px solid #b4b6b8;
+  }
+
   .container-fluid {
-    padding-right: 70px;
-    padding-left: 70px;
+    padding-right: 50px;
+    padding-left: 50px;
     margin-right: auto;
     margin-left: auto;
   }
