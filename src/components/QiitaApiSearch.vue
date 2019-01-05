@@ -105,8 +105,8 @@ export default {
       var params = {page: 2, per_page: 100, query: this.keyword}
       axios.get('https://qiita.com/api/v2/items', {params})
         .then(function (response) {
-          console.log(response)
-          // vm.items = response.data
+          // console.log(response)
+          vm.items = response.data
         })
         .catch(function (error) {
           vm.message = 'Error!' + error
@@ -165,7 +165,7 @@ export default {
     }
   },
   filters: {
-    // 日時フォーマット定義
+    // 日時フォーマット変換
     moment: function (date) {
       return moment(date).format('YYYY/MM/DD HH:mm')
     },
