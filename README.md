@@ -1,7 +1,7 @@
 # QiitaApiSearch
-
-> VUe.jsとQiitaApiを利用したQiita記事検索アプリ
-> 検索キーワードを入力することでリアルタイム検索を実行する。
+VUe.jsとQiitaApiを利用したQiita記事検索アプリ
+検索キーワードを入力することでリアルタイム検索を実行する。
+http://ishikawork.ga/
 
 ## Build Setup
 
