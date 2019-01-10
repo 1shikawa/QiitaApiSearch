@@ -1,14 +1,9 @@
 <template>
-  <div class="qiitasearch">
+  <div class="qiitasearch" id="gaa">
     <p>
       <input type="text" v-model="keyword" placeholder="キーワードを入力">
-
     </p>
-    <p> ex.. {{ sample }}</p>
-    <button class="btn btn-secondary" v-on:click="getAnswer2">page2</button>
-    <button class="btn btn-secondary" v-on:click="getAnswer3">page3</button>
-    <button class="btn btn-secondary" v-on:click="getAnswer4">page4</button>
-    <button class="btn btn-secondary" v-on:click="getAnswer5">page5</button>
+    <p> ex.. {{ example }}</p>
     <p>{{ message }}</p>
 
     <div class="container-fluid ">
@@ -55,8 +50,10 @@ export default {
     return {
       items: '',
       keyword: '',
+      page: 1,
+      per_page: 100,
       message: '',
-      sample: 'python, django, vue, aws, docker, golang...'
+      example: 'python, django, vue, aws, docker, golang...'
     }
   },
 
@@ -68,11 +65,17 @@ export default {
       this.debouncedGetAnswer()
     }
   },
+
   created: function () {
     this.keyword = ''
     this.getAnswer()
     this.debouncedGetAnswer = _.debounce(this.getAnswer, 1000)
   },
+
+  destroyed: function () {
+    window.removeEventListener('scroll', this.scroll)
+  },
+
   methods: {
     getAnswer: function () {
       // 検索テキストが入力されてない場合
@@ -85,7 +88,7 @@ export default {
       this.message = 'Loading...'
       var vm = this
       // 検索パラメータ
-      var params = {page: 1, per_page: 100, query: this.keyword}
+      var params = {page: this.page, per_page: this.per_page, query: this.keyword}
       // QiitaAPIからデータ取得
       axios.get('https://qiita.com/api/v2/items', {params})
         .then(function (response) {
@@ -99,71 +102,21 @@ export default {
           vm.message = ''
         })
     },
-    getAnswer2: function () {
-      this.message = 'Loading...'
-      var vm = this
-      var params = {page: 2, per_page: 100, query: this.keyword}
-      axios.get('https://qiita.com/api/v2/items', {params})
-        .then(function (response) {
-          // console.log(response)
-          vm.items = response.data
-        })
-        .catch(function (error) {
-          vm.message = 'Error!' + error
-        })
-        .finally(function () {
-          vm.message = ''
-        })
-    },
-    getAnswer3: function () {
-      this.message = 'Loading...'
-      var vm = this
-      var params = {page: 3, per_page: 100, query: this.keyword}
-      axios.get('https://qiita.com/api/v2/items', {params})
-        .then(function (response) {
-          console.log(response)
-          vm.items = response.data
-        })
-        .catch(function (error) {
-          vm.message = 'Error!' + error
-        })
-        .finally(function () {
-          vm.message = ''
-        })
-    },
-    getAnswer4: function () {
-      this.message = 'Loading...'
-      var vm = this
-      var params = {page: 4, per_page: 100, query: this.keyword}
-      axios.get('https://qiita.com/api/v2/items', {params})
-        .then(function (response) {
-          // console.log(response)
-          vm.items = response.data
-        })
-        .catch(function (error) {
-          vm.message = 'Error!' + error
-        })
-        .finally(function () {
-          vm.message = ''
-        })
-    },
-    getAnswer5: function () {
-      this.message = 'Loading...'
-      var vm = this
-      var params = {page: 5, per_page: 100, query: this.keyword}
-      axios.get('https://qiita.com/api/v2/items', {params})
-        .then(function (response) {
-          // console.log(response)
-          vm.items = response.data
-        })
-        .catch(function (error) {
-          vm.message = 'Error!' + error
-        })
-        .finally(function () {
-          vm.message = ''
-        })
+
+    pager: function () {
+      if (window.scrollY + window.innerHeight === document.documentElement.clientHeight) {
+      // if(aaaa.getBoundingClientRect().bottom < window.innerHeight){
+        this.page++
+        this.getAnswer()
+      }
     }
   },
+
+  mounted () {
+    window.addEventListener('scroll', this.pager)
+    this.pager()
+  },
+
   filters: {
     // 日時フォーマット変換
     moment: function (date) {
