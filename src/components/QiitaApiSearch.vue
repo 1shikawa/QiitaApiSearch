@@ -1,5 +1,5 @@
 <template>
-  <div class="qiitasearch" id="gaa">
+  <div class="qiitasearch">
     <p>
       <input type="text" v-model="keyword" placeholder="キーワードを入力">
     </p>
@@ -12,6 +12,7 @@
         <tr>
           <th>タイトル</th>
           <th>投稿日</th>
+          <th>投稿者ID</th>
           <th>投稿者Twitter</th>
           <th>投稿者Webサイト</th>
           <th>いいね数</th>
@@ -26,6 +27,7 @@
             '...') }}</a></td>
           <td v-else><a v-bind:href="item.url" target="_blank">{{ item.title }}</a></td>
           <td>{{ item.created_at | moment }}</td>
+          <td>{{ item.user.id }}</td>
           <td v-if="item.user.twitter_screen_name">https://twitter.com/{{ item.user.twitter_screen_name}}</td>
           <td v-else></td>
           <td><a v-bind:href="item.user.website_url">{{ item.user.website_url }}</a></td>
@@ -101,21 +103,23 @@ export default {
         .finally(function () {
           vm.message = ''
         })
-    },
-
-    pager: function () {
-      if (window.scrollY + window.innerHeight === document.documentElement.clientHeight) {
-      // if(aaaa.getBoundingClientRect().bottom < window.innerHeight){
-        this.page++
-        this.getAnswer()
-      }
     }
   },
 
-  mounted () {
-    window.addEventListener('scroll', this.pager)
-    this.pager()
-  },
+  // 自動でページ読み込み？？
+  //   pager: function () {
+  //     if (window.scrollY + window.innerHeight === document.documentElement.clientHeight) {
+  //     // if(aaaa.getBoundingClientRect().bottom < window.innerHeight){
+  //       this.page++
+  //       this.getAnswer()
+  //     }
+  //   }
+  // },
+  //
+  // mounted () {
+  //   window.addEventListener('scroll', this.pager)
+  //   this.pager()
+  // },
 
   filters: {
     // 日時フォーマット変換
