@@ -1,12 +1,12 @@
 <template>
-  <div class="qiitasearch">
-    <p>
+  <div>
+    <p>関連記事を投稿日時の新しい順に100件表示し、ページ下部までスクロールすると次の100件を表示します。</p>
+    <a>
       <input type="text" v-model="keyword" placeholder="キーワードを入力">
-    </p>
+    </a>
     <p> ex.. {{ example }}</p>
     <p>{{ message }}</p>
-
-    <div class="container-fluid ">
+    <div class="container-fluid">
       <table class="table table-hover">
         <thead class="thead-light">
         <tr>
@@ -20,9 +20,9 @@
           <!--<th>閲覧数</th>-->
         </tr>
         </thead>
-        <tbody v-for="(item, key, index) in items" :key="index">
-        <tr>
-          <!--<td><a v-bind:href="item.url" target="_blank">{{ item.title | readMore(70, "...")}}</a></td>-->
+        <tbody>
+        <tr v-for="(item, $index) in list" :key="$index">
+          <!--<td><a :href="item.url">{{item.title}}</a></td>-->
           <td v-if="item.title.length > 60"><a v-bind:href="item.url" target="_blank">{{ item.title | readMore(60,
             '...') }}</a></td>
           <td v-else><a v-bind:href="item.url" target="_blank">{{ item.title }}</a></td>
@@ -33,100 +33,96 @@
           <td><a v-bind:href="item.user.website_url">{{ item.user.website_url }}</a></td>
           <td>{{ item.likes_count }}</td>
           <td>{{ item.comments_count }}</td>
-          <!--<td>{{ item.page_views_count }}</td>-->
         </tr>
         </tbody>
+
       </table>
+      <infinite-loading slot="append"
+                        :identifier="infiniteId"
+                        @infinite="infiniteHandler"
+                        spinner="bubbles"
+                        force-use-infinite-wrapper=".table__body-wrapper">
+        <div slot="no-more">No more message</div>
+        <div slot="no-results">No results message</div>
+      </infinite-loading>
     </div>
   </div>
 </template>
 
 <script>
-import _ from 'lodash'
+import InfiniteLoading from 'vue-infinite-loading'
 import axios from 'axios'
 import moment from 'moment'
+import _ from 'lodash'
+
+const api = 'https://qiita.com/api/v2/items'
 
 export default {
-  name: 'QiitaSearch',
+  name: 'app',
+  components: {
+    InfiniteLoading
+  },
   data () {
     return {
-      items: '',
-      keyword: '',
       page: 1,
       per_page: 100,
+      list: [],
       message: '',
-      example: 'python, django, vue, aws, docker, golang...'
+      keyword: '',
+      infiniteId: +new Date(),
+      example: 'Python, Django, Vue, Aws, Docker, Golang...'
+
     }
   },
 
   // 監視プロパティ
   watch: {
     keyword: function (newKeyword, oldkeyword) {
-      // console.log(newKeyword)
-      this.message = 'Waiting for you to stop typing...'
-      this.debouncedGetAnswer()
+      console.log(newKeyword)
+      this.debouncedGetPosts()
     }
   },
 
   created: function () {
     this.keyword = ''
-    this.getAnswer()
-    this.debouncedGetAnswer = _.debounce(this.getAnswer, 1000)
-  },
-
-  destroyed: function () {
-    window.removeEventListener('scroll', this.scroll)
+    this.debouncedGetPosts = _.debounce(this.getPosts, 1000)
   },
 
   methods: {
-    getAnswer: function () {
-      // 検索テキストが入力されてない場合
-      if (this.keyword === '') {
-        this.items = null
-        this.message = ''
-        return
-      }
-
-      this.message = 'Loading...'
-      var vm = this
-      // 検索パラメータ
+    infiniteHandler ($state) {
       var params = {page: this.page, per_page: this.per_page, query: this.keyword}
-      // QiitaAPIからデータ取得
-      axios.get('https://qiita.com/api/v2/items', {params})
-        .then(function (response) {
-          // console.log(response)
-          vm.items = response.data
-        })
-        .catch(function (error) {
-          vm.message = 'Error!' + error
-        })
-        .finally(function () {
-          vm.message = ''
-        })
+      const headers = {
+        'content-type': 'application/json',
+        'charset': 'utf-8',
+        'Authorization': 'Bearer ' + 'cf49231f2c378eef468bf5435d9d6bcd632ccf0a'
+      }
+      axios.get(api, {params}, {headers}
+      ).then(({data}) => {
+        if (data.length) {
+          this.page += 1
+          this.list.push(...data)
+          $state.loaded()
+        } else {
+          $state.complete()
+        }
+      }).catch((error) => {
+        console.log(error)
+      })
+    },
+
+    getPosts () {
+      this.page = 1
+      this.list = []
+      this.infiniteId += 1
     }
   },
-
-  // 自動でページ読み込み？？
-  //   pager: function () {
-  //     if (window.scrollY + window.innerHeight === document.documentElement.clientHeight) {
-  //     // if(aaaa.getBoundingClientRect().bottom < window.innerHeight){
-  //       this.page++
-  //       this.getAnswer()
-  //     }
-  //   }
-  // },
-  //
-  // mounted () {
-  //   window.addEventListener('scroll', this.pager)
-  //   this.pager()
-  // },
 
   filters: {
     // 日時フォーマット変換
     moment: function (date) {
       return moment(date).format('YYYY/MM/DD HH:mm')
     },
-    // ローカルフィルタ引数
+    // ローカルフィルタ引数(length以上はsuffix表示)
     readMore: function (text, length, suffix) {
       return text.substring(0, length) + suffix
     }
@@ -139,14 +135,11 @@ export default {
     table-layout: auto;
   }
 
-  /*.table {*/
-    /*border: 1px solid #b4b6b8;*/
-  /*}*/
-
   .table tr td {
     border: 1px solid #b4b6b8;
   }
-    .table tr th {
+
+  .table tr th {
     border: 1px solid #b4b6b8;
   }
 
