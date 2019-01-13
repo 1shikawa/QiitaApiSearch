@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import QiitaApiSearch from '@/components/QiitaApiSearch'
+import QiitaApiSearch from '@/components/QiitaApiSearch.vue'
 
 Vue.use(Router)
 
