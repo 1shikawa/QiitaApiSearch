@@ -3,11 +3,13 @@ Vue.js(Vue Cli)とQiitaApiを利用したQiita記事検索アプリ
 検索キーワードを入力することでリアルタイム検索を実行する。  
 https://qiitaapisearch.ishikawork.ga/#/QiitaApiSearch
 
-## 開発技術
+## 開発利用技術
 ・Vue.js(Vue Cli)  
 ・Qiita Api  
 ・AWS(Route53,CloudFront,S3,Certificate Manager)
 
+## 構成概要
+TBD...
 
 ## Build Setup
 
