@@ -3,6 +3,7 @@
     <p>関連記事を投稿日時の新しい順に100件表示し、ページ下部までスクロールすると次の100件を表示します。</p>
     <a>
       <input type="text" v-model="keyword" placeholder="キーワードを入力">
+      <button class="btn btn-info" v-on:click="clear">クリア</button>
     </a>
     <p> ex.. {{ example }}</p>
     <p>{{ message }}</p>
@@ -42,8 +43,8 @@
                         @infinite="infiniteHandler"
                         spinner="bubbles"
                         force-use-infinite-wrapper=".table__body-wrapper">
-        <div slot="no-more">No more message</div>
-        <div slot="no-results">No results message</div>
+        <div slot="no-more">これ以上投稿記事はありません。</div>
+        <div slot="no-results">該当する投稿はありません。</div>
       </infinite-loading>
     </div>
   </div>
@@ -58,7 +59,7 @@ import _ from 'lodash'
 const api = 'https://qiita.com/api/v2/items'
 
 export default {
-  name: 'app',
+  name: 'qiitaapisearch',
   components: {
     InfiniteLoading
   },
@@ -75,7 +76,7 @@ export default {
     }
   },
 
-  // 監視プロパティ
+  // keyword入力フィールドの監視プロパティ
   watch: {
     keyword: function (newKeyword, oldkeyword) {
       console.log(newKeyword)
@@ -90,6 +91,7 @@ export default {
 
   methods: {
     infiniteHandler ($state) {
+      this.keyword = this.keyword.toLowerCase()
       var params = {page: this.page, per_page: this.per_page, query: this.keyword}
       const headers = {
         'content-type': 'application/json',
@@ -110,10 +112,17 @@ export default {
       })
     },
 
+    // InfiniteLoadingの再リロード
     getPosts () {
       this.page = 1
       this.list = []
       this.infiniteId += 1
+    },
+
+    // keyword,listのクリア
+    clear: function () {
+      this.keyword = ''
+      this.list = []
     }
   },
 
